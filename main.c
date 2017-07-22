@@ -36,17 +36,22 @@ int main(int argc, char *argv[])
         if(res==0) continue;
         printf("Source MAC Address : %02x:%02x:%02x:%02x:%02x:%02x\n", *(packet+6), *(packet+7), *(packet+8), *(packet+9), *(packet+10), *(packet+11));
         printf("Destination MAC Address : %02x:%02x:%02x:%02x:%02x:%02x\n", *(packet), *(packet+1), *(packet+2), *(packet+3), *(packet+4), *(packet+5));
+
         if(packet[12]==0x08 && packet[13]==0x00){
             printf("Source IP Address : %d.%d.%d.%d\n", *(packet+26), *(packet+27), *(packet+28), *(packet+29));
             printf("Destination IP Address : %d.%d.%d.%d\n", *(packet+30), *(packet+31), *(packet+32), *(packet+33));
-            //((packet[14]=0x00)+(packet[15]) && 1)*4
+
             if(packet[23]==0x06){
                 printf("Source Port : %d \n", (*(packet+34)*256)+(*(packet+35)));
                 printf("Destination Port : %d\n", (*(packet+36)*256)+(*(packet+37)));
-
             }
-
         }
+        printf("Data :\n");
+        for(int i=0; i<48; i++){
+            printf("%02x ", *(packet+i+(*(packet+14)&0x0f)+14));
+            if(i%8==7)printf("\n");
+        }
+
         printf("-------------------------------------------------------------\n");
 
     }
